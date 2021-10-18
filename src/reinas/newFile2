@@ -1,0 +1,67 @@
+int dimension = DIMENSION;
+        List<Integer> tablero = new ArrayList<>();
+
+        int[][] array = new int[dimension][dimension];
+        List<Integer> listaReinas = new ArrayList<>();
+
+        int reinas = 0;
+        //inicializamos todas las posiciones dentro del vencto a 0
+
+        for (int i = 0; i < dimension * dimension; i++) {
+            tablero.add(0);
+        }
+
+        // se inicializan las reinas en modo de un vector 
+        // la posici?n i representa la columna 
+        // el valor en la columna representa la fila
+        //creo que esta inicializaci?n no admite coliciones horizontales ni verticales 
+        for (int i = 0; i < dimension; i++) {
+            //int posicion = random.nextInt(dimension);           
+
+            listaReinas.add(i);
+        }
+
+        Collections.shuffle(listaReinas);
+        System.out.println(listaReinas);
+        
+        //ver que esto se recorre primero filas y luego columnas
+        for (int i = 0; i < dimension; i++) {
+            int reina = listaReinas.get(i);
+            for (int j = 0; j < dimension; j++) {
+                array[i][j] = (reina == j) ? 1 : 0;
+                System.out.print(array[i][j] + " ");
+            }
+            System.out.println("");
+        }
+
+        List<Integer> colDiagonal_positiva = new ArrayList<>();
+        List<Integer> colDiagonal_negativa = new ArrayList<>();
+        int fitness = 0;
+
+        for (int i = 0; i < dimension; i++) {
+
+            int fila = i;
+            int columna = listaReinas.get(i);
+
+            int aux = (fila - columna);
+
+            if (colDiagonal_positiva.contains(aux)) {
+                fitness++;
+                //System.out.println("x: "+fila+" y: "+columna);
+            } else {
+                colDiagonal_positiva.add(aux);
+                //System.out.println("x: "+fila+" y: "+columna);
+            }
+            
+            int aux2 = fila + columna;
+
+            if (colDiagonal_negativa.contains(aux2)) {
+                fitness++;
+            } else {
+                colDiagonal_negativa.add(aux2);
+            }
+        }
+       
+        System.out.println(fitness);
+
+        fitness = 0;

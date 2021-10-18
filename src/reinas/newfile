@@ -1,0 +1,237 @@
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package reinas;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+/**
+ *
+ * @author Pipe_
+ */
+public class Reinas {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // creating an object of Random class   
+        Random random = new Random();
+        //Imprime n?meros entre 0 y 1
+        //System.out.println(random.nextInt(2));
+        //tambien se podr?a hacer
+
+        //System.out.println((int) (Math.random() * (2)));
+
+        //considerando una semilla deber?a ser
+        Random seed = new Random(12);
+        //System.out.println(seed.nextInt(2));
+
+        //inicializar un vector de N t?rminos
+        int dimension = 3;
+        List<Integer> tablero = new ArrayList<>();
+
+        int[][] array = new int[dimension][dimension];
+        List<Integer> listaReinas = new ArrayList<>();
+
+        int reinas = 0;
+        //inicializamos todas las posiciones dentro del vencto a 0
+
+        for (int i = 0; i < dimension * dimension; i++) {
+            tablero.add(0);
+        }
+
+        // se inicializan las reinas en modo de un vector 
+        // la posici?n i representa la columna 
+        // el valor en la columna representa la fila
+        //creo que esta inicializaci?n no admite coliciones horizontales ni verticales 
+        for (int i = 0; i < dimension; i++) {
+            //int posicion = random.nextInt(dimension);           
+            
+            listaReinas.add(i);
+        }
+        
+        System.out.println(listaReinas);
+        Collections.shuffle(listaReinas);
+        
+       
+        //ver que esto se recorre primero filas y luego columnas
+        for (int i = 0; i < dimension; i++) {
+            int reina = listaReinas.get(i);
+            for (int j = 0; j < dimension; j++) {
+                array[i][j] = (reina == j) ? 1 : 0;
+                System.out.print(array[i][j]+" ");
+            }
+            System.out.println("");
+        }
+        
+        while (dimension != reinas) {
+            //genermos posiciones entre 0 y n 
+            //le damos un valor random entre 0 y 1
+            //donde 0 = nada, 1 = reina
+            int posicion = random.nextInt(dimension * dimension);
+            // si la posici?n dentro del tablero est? en 0 se pone una reina
+            //y se aumenta el contador
+            //si est? en 0 se busca otra posici?n
+
+            if (tablero.get(posicion) == 0) {
+                tablero.set(posicion, 1);
+                reinas++;
+            }
+        }
+        
+        System.out.println(tablero);
+
+        //como sabemos la dimension del tablero 
+        //es f?cil saber que cada n posiciones comienza una fila nueva 
+        //por lo que para encontrar colision horizontal s?lo revisamos cada n valores
+        //para saber cuando comienza una nueva fila podemos utilizar el m?dulo y la posic?n 
+        // revisamos cada fila y si al finalizar la suma de reinas es mayor a 1 
+        //hay una colici?n
+        /**
+         * Colision horizontal
+         */
+        int fitnes = 0;
+        int colisiones = 0;
+
+        for (int i = 0; i < tablero.size(); i++) {
+
+            //como los valores de reinas son 1 y el resto es 0, s?lo sumamos
+            colisiones += tablero.get(i);
+            // si el modulo es 0 sabemos que lleamos a un extremo del tablero
+            if ((i + 1) % dimension == 0) {
+                //si las colisiones son mayores a 1, pues hay una colision
+                //un 1 indica que hay una reina
+                if (colisiones > 1) {
+                    fitnes += colisiones;
+                }
+                //inicializaciones las colisiones para la siguiente ronda
+                colisiones = 0;
+
+            }
+        }
+        
+        
+        System.out.println("Fitnes H: "+ fitnes);
+        //nota, tambien se podr?a simplemente agregar la unica reina al fitnes
+        //de no haber ninguna colisi?n, pues se van a tener dimensiones * 4 para el fitnes perfecto
+        //porque se encontrarian n horizontales, n verticales, n diagonales, n la otra diagonal
+
+        /**
+         * Colsi?n vertiva
+         */
+        //como es un vector es un poco m?s complicado
+        //pero la verdad es que s?lo hay que hacer 
+        //un for hasta "dimension" y sumar tantas "dimensiones" al i que se vea para recorrer en vertical
+        //el an?lisis ser? el mismo que el del horizontal
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                //recorremos verticalmente el tablero
+                colisiones += tablero.get(i + j * dimension);
+            }
+            //si las colisiones son mayores a 1, pues hay una colision
+            //un 1 indica que hay una reina
+            if (colisiones > 1) {
+                fitnes += colisiones;
+
+            }
+            //inicializaciones las colisiones para la siguiente ronda
+            colisiones = 0;
+        }
+
+        System.out.println("Fitnes H+V: "+ fitnes);
+        /* ---------------------------------------------------------------  */
+        //Colisiones diagonales
+        //en el caso del arreglo s?lo analizamos la lista 
+        List<Integer> colDiagonal_positiva = new ArrayList<>();
+        List<Integer> colDiagonal_negativa = new ArrayList<>();
+
+        for (int i = 0; i < dimension; i++) {
+            int aux = Math.abs(i - listaReinas.get(i));
+            if (colDiagonal_positiva.contains(aux)) {
+                //fitnes++;
+            } else {
+                //colDiagonal_positiva.add(aux);
+            }
+
+            aux = Math.abs(i + listaReinas.get(i));
+            if (colDiagonal_negativa.contains(aux)) {
+                //fitnes++;
+            } else {
+                //colDiagonal_negativa.add(aux);
+            }
+        }
+
+        //Ahora el an?lisis de la cosa que es un vector
+        //se puede hacer tanto en el an?lisis vertical como en el horizontal 
+        //lo voy a copiar, s?lo por orden
+        colDiagonal_negativa.clear();
+        colDiagonal_positiva.clear();
+        //en este caso para saber el n?mero de la fila haremos 
+        //divisi?n de la posici?n por el total (dimension)
+        //como ambos son valores enteros la divis?n se redondea al menor
+        // es decir si posici?n = 7, dimensi?n = 8 
+        // 7 / 8 = 0.875 y eso es fila 0 
+        // si tenemo 15, pues es 2.125 y es fila 2
+
+        //para las columnas es similar, pero con el modulo
+        // 7 % 8 = 7, es decir columan 7
+        // 17 % 8 = 1, es decir columna 1 
+        for (int i = 0; i < tablero.size(); i++) {
+
+            if (tablero.get(i) == 1) {
+                int fila = i / dimension;
+                int columna = i % dimension;
+                
+                int aux = Math.abs(fila - columna);
+                
+                if (colDiagonal_positiva.contains(aux)) {
+                    fitnes++;
+                    System.out.println("Diag-Pos x: "+fila+" y: "+columna+" |fila-columna|= "+Math.abs(fila - columna));
+                } else {
+                    System.out.println("x: "+fila+" y: "+columna+" |fila-columna|= "+Math.abs(fila - columna));
+                    colDiagonal_positiva.add(aux);
+                }
+                    /*
+                aux = Math.abs(fila + columna);
+                
+                if (colDiagonal_negativa.contains(aux)) {
+                    fitnes++;
+                    System.out.println("Diag-Neg colisi?n en fila: "+fila+" columna: "+columna);
+                } else {
+                    colDiagonal_negativa.add(aux);
+                }
+                */
+            }
+        }
+        /**
+         * Nota, en este caso si hay una colision diagonal
+         * se cuenta 2
+         */
+        // ---------------------------------------------------------
+        
+        // imprimos el resultado;
+        
+       
+        for (int i = 0; i < tablero.size(); i++) {           
+            
+            
+            if(i%dimension==0){
+                System.out.println("");
+            }
+            System.out.print(tablero.get(i)+" ");
+            
+        }
+        
+        System.out.println("\n"+fitnes);
+        
+
+    }
+
+}
