@@ -42,7 +42,7 @@ public class Reinas {
         
         //tp 100, ti 10000 t 20  s2 pc 5 pm 5 da resultado todas las iteraciones con mal fit
         
-        /*
+        
         try {
             if (args.length < 6) {
                 System.err.println("El mínimo de parámetros es 6");
@@ -58,12 +58,12 @@ public class Reinas {
         } catch (Exception e) {
             System.err.println(e);
             System.exit(1);
-        }
-         */
+        }        
         
         auxIteracion = 0;
         numero_hijo = 0;
         numero_mejor_hijo = 0;
+        
         //el mejor fitness se inicializa como max valu
         //es casi como decir "infinito"
         mejorFitness = Integer.MAX_VALUE;
