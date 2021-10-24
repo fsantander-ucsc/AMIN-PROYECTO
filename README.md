@@ -18,7 +18,7 @@ Está disponible todo el código fuente para descargar y compilar, pero también
 Donde:
 
  - **Valor de la semilla** :  Valor entero
-- **Tamaño del tablero**: Dimensiones del tablero, en caso de ser un tablero de 8x8 se debe ingresa 8.
+- **Tamaño del tablero**: Dimensiones del tablero, en caso de ser un tablero de 8x8 se debe ingresar 8.
 - **Tamaño de la población**: Entero que representa la cantidad de individuos a crear y replicar.
 - **Probabilidad de cruza**: Valor entero entre 0 y 100, que representa la probabilidad de que dos individuos se crucen y generen descendencia
 - **Probabilidad de mutación**: Valor entre 0 y 100 que representa la probabilidad de que la descendencia genere una mutación de sus genes
